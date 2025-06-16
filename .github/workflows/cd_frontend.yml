@@ -1,12 +1,12 @@
 name: Deploy frontend 
 on:
  push: 
-  branch: [main]
+  branches: [main]
 
 jobs:
  build:
-  run-on: ubuntu-latest
-  steps:
+   runs-on: ubuntu-latest
+   steps:
     - name: cheak the code
       uses: actions/checkout@v2
     
