@@ -3,12 +3,14 @@ FROM node:18-alpine AS build
 
 WORKDIR /app
 
+COPY Frontend/package.json Frontend/package-lock.json ./Frontend/
+WORKDIR /app/Frontend
 
-COPY package.json package-lock.json ./
 RUN npm install
 
 
-COPY . .
+COPY Frontend/. ./ 
+
 RUN npm run build
 
 
@@ -20,9 +22,9 @@ WORKDIR /app
 RUN npm install -g serve
 
 
-COPY --from=build /app/dist ./dist
+COPY --from=build /app/Frontend/dist ./dist
 
 
 
-EXPOSE 3000
+EXPOSE 5173
 CMD ["serve", "-s", "dist", "-l", "5173"]
