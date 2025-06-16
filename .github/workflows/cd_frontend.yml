@@ -22,7 +22,7 @@ jobs:
           context: .
           file: ./Dockerfile/Dockerfile.frontend
           push: true
-          tags: lavkushwaha01/DevOps_1st_project_frontend:${{ github.sha }}
+          tags: lavkushwaha01/devops_1st_project_frontend:${{ github.sha }}
     
    
 
