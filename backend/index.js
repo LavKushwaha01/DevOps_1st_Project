@@ -30,7 +30,7 @@ await connectDB();
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World by lav!');
+  res.send('Hello World bylav!');
 });
 
 app.post('/user', async (req, res) => {
