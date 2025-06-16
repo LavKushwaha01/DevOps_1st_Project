@@ -1,0 +1,25 @@
+(1.)=> oding part
+
+-----------------------------
+
+(2.)=> image creation and run on container 
+
+1st for build image of backend run the cmd 
+  | ~/Desktop/DEVOPS/Projects/1st_node_project$  sudo docker build -f Dockerfile/Dockerfile.backend -t my-node-app .
+
+2nd for build image of frontend run the cmd
+  | lav@lav-Aspire-A715-51G:~/Desktop/DEVOPS/Projects/1st_node_project$ sudo docker build -f Dockerfile/Dockerfile.frontend -t my-react-app ./Frontend
+
+3rd for run backend use cmd
+  | docker run -p 3000:3000 my-node-app
+
+4th for run frontend use cmd 
+  | docker run -p 5173:5173 my-react-app
+
+--------------------------------------------------------------------------------
+* Now our both frontend and image is created and run on live server at localHost://5173 and 3000 port respectively and all the data 
+  from frontend we give store to our database at Docker-database
+
+----------------------------------------------------------------------------------
+
+

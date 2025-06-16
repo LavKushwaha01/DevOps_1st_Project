@@ -1,0 +1,28 @@
+# Step 1: Build React app
+FROM node:18-alpine AS build
+
+WORKDIR /app
+
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy rest of the code and build
+COPY . .
+RUN npm run build
+
+# Step 2: Serve with a simple static server
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install a lightweight static file server
+RUN npm install -g serve
+
+# Copy build files from previous stage
+COPY --from=build /app/dist ./dist
+
+
+# Expose port and start the app
+EXPOSE 3000
+CMD ["serve", "-s", "dist", "-l", "5173"]
