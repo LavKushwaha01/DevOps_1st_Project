@@ -26,3 +26,6 @@ jobs:
             PORT=${{ secrets.BACKEND_PORT }}
           push: true
           tags: lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
+
+    - name: Deploy to VM
+      uses: 
