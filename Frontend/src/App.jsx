@@ -39,7 +39,7 @@ function App() {
 
   return (
     <>
-    <h1>Dekh le be Bhadwe</h1>
+    <h1>Input daal kr cheak kijiye manniya..</h1>
       <input type="text" placeholder='Enter email here' ref={email} />
       <input type="password" placeholder='Enter your password' ref={password} />
       <button onClick={submit}>Submit</button>
