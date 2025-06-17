@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Check out the code
         uses: actions/checkout@v2
 
       - name: Docker login
@@ -23,28 +23,26 @@ jobs:
         with:
           context: .
           file: ./Dockerfile/Dockerfile.backend
+          build-args: |
+            MONGO_URL=${{ secrets.DATABASE_URL }}
+            PORT=${{ secrets.BACKEND_PORT }}
           push: true
           tags: lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
-          build-args: |
-            MONGO_URI=${{ secrets.DATABASE_URL }}
-            PORT=${{ secrets.BACKEND_PORT }}
 
       - name: Deploy to VM
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
           chmod 600 ~/ssh_key
 
-          # Store env vars as shell variables
-          export MONGO_URI="${{ secrets.DATABASE_URL }}"
+          export MONGO_URL="${{ secrets.DATABASE_URL }}"
           export BACKEND_PORT="${{ secrets.BACKEND_PORT }}"
 
-          # Connect and deploy
           ssh -o StrictHostKeyChecking=no -i ~/ssh_key lav@34.131.95.237 << EOF
             docker stop user_backend || true
             docker rm user_backend || true
             docker run --name user_backend -d \
               -p \$BACKEND_PORT:\$BACKEND_PORT \
-              -e MONGO_URI="\$MONGO_URI" \
+              -e MONGO_URL="\$MONGO_URL" \
               -e PORT=\$BACKEND_PORT \
               lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
-          EOF
+              EOF
