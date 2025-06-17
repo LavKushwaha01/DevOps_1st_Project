@@ -1,43 +1,50 @@
 name: Deploy backend
+
 on:
- push: 
-  branches: [main]
+  push:
+    branches: [main]
 
 jobs:
- build:
-   runs-on: ubuntu-latest
-   steps:
-    - name: cheak the code
-      uses: actions/checkout@v2
-    
-    - name: Docker login
-      uses: docker/login-action@v2
-      with:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and push 
-      uses: docker/build-push-action@v4
-      with:
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
           context: .
           file: ./Dockerfile/Dockerfile.backend
-          build-args: |
-            MONGO_URL=${{ secrets.DATABASE_URL }}
-            PORT=${{ secrets.BACKEND_PORT }}
           push: true
           tags: lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
+          build-args: |
+            MONGO_URI=${{ secrets.DATABASE_URL }}
+            PORT=${{ secrets.BACKEND_PORT }}
 
-    - name: Deploy to VM
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-        chmod 600 ~/ssh_key
-        MONGO_URI="${{ secrets.MONGO_URI }}"
-        ssh -o StrictHostKeyChecking=no -i ~/ssh_key lav@34.131.95.237 << EOF
-          docker stop user_backend || true
-          docker rm user_backend || true
-          docker run --name user_backend -d \
-            -p 3000:3000 \
-            -e MONGO_URI="$MONGO_URI" \
-            -e PORT=3000 \
-            lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
-        EOF
+      - name: Deploy to VM
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+
+          # Store env vars as shell variables
+          export MONGO_URI="${{ secrets.DATABASE_URL }}"
+          export BACKEND_PORT="${{ secrets.BACKEND_PORT }}"
+
+          # Connect and deploy
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key lav@34.131.95.237 << EOF
+            docker stop user_backend || true
+            docker rm user_backend || true
+            docker run --name user_backend -d \
+              -p \$BACKEND_PORT:\$BACKEND_PORT \
+              -e MONGO_URI="\$MONGO_URI" \
+              -e PORT=\$BACKEND_PORT \
+              lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
+          EOF
