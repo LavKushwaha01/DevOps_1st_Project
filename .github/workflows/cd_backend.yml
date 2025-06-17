@@ -28,4 +28,7 @@ jobs:
           tags: lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
 
     - name: Deploy to VM
-      uses: 
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+        chmod 600 ~/ssh_key
+        ssh -o StrictHostKeyChecking=no -i ~/ssh_key lav@34.131.95.237 -t "docker stop user_backend || true && docker rm user_backend || true && docker run --name user_backend -d -p 3000:3000 lavkushwaha01/devops_1st_project_backend:${{ github.sha }}"
