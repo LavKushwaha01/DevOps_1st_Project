@@ -34,15 +34,13 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
           chmod 600 ~/ssh_key
 
-          export MONGO_URL="${{ secrets.DATABASE_URL }}"
-          export BACKEND_PORT="${{ secrets.BACKEND_PORT }}"
-
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key lav@34.131.95.237 << EOF
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key lav@34.131.95.237 << 'EOF'
             docker stop user_backend || true
             docker rm user_backend || true
+
             docker run --name user_backend -d \
-              -p \$BACKEND_PORT:\$BACKEND_PORT \
-              -e MONGO_URL="\$MONGO_URL" \
-              -e PORT=\$BACKEND_PORT \
+              -p 3000:3000 \
+              -e MONGO_URL="${{ secrets.DATABASE_URL }}" \
+              -e PORT=3000 \
               lavkushwaha01/devops_1st_project_backend:${{ github.sha }}
-              EOF
+            EOF
