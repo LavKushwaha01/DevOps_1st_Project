@@ -1,4 +1,4 @@
-(1.)=> oding part
+(1.)=> coding part
 
 -----------------------------
 
@@ -22,4 +22,16 @@
 
 ----------------------------------------------------------------------------------
 
+create a dir .github/workflows and inside these create files of yml for both frontend and backend 
+then just push it on github and these yml run all the cmds and deploy our appplication to live server 
 
+ *** create gcp as usualy but after create go to edit section and then in ssh add type1 and add public key which private key we kept locally
+then go tp vps network -> firewall -> create firewall rule : add your TCP port here and 0.0.0.0/0 for all machine and some other cheaks
+
+after all of these when code is pushed in VM
+
+/ for ssh use ssh lav@Ipv4 and then 1st install docker in cmd shell it will not installed by github action
+
+set enviorement variable by referance of yml file and set fetch request to external Ip now not in localhost 
+
+**** if faces any issue just read all codes of this file
