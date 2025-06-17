@@ -26,5 +26,5 @@ jobs:
     - name: Deploy to the VM
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-        chmod 700 ~/ssh_key
+        chmod 600 ~/ssh_key
         ssh -o StrictHostKeyChecking=no -i ~/ssh_key lav@34.131.95.237 -t "docker stop user_frontend && docker run --name user_backend -d -p 5173:5173 lavkushwaha01/devops_1st_project_frontend:${{ github.sha }}"
